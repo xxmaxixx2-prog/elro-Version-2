@@ -1,0 +1,14 @@
+[Unit]
+Description=Pi Receiver Kiosk
+After=graphical.target network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=/opt/pi-receiver/receiver.env
+ExecStart=/opt/pi-receiver/host/start-kiosk.sh
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=graphical.target

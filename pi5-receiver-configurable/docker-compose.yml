@@ -1,0 +1,17 @@
+services:
+  pi-receiver-api:
+    build:
+      context: ./api
+    container_name: pi-receiver-api
+    restart: unless-stopped
+    env_file:
+      - receiver.env
+    environment:
+      STATE_FILE: /data/state.json
+      RELOAD_TOKEN_FILE: /data/reload.token
+      HOST_BLANK_URL: ${HOST_BLANK_URL:-file:///opt/pi-receiver/host/blank.html}
+      DEFAULT_URL: ${DEFAULT_URL:-file:///opt/pi-receiver/host/blank.html}
+    ports:
+      - "${API_PORT:-18091}:${CONTAINER_PORT:-8091}"
+    volumes:
+      - "${BASE_DIR:-/opt/pi-receiver}/shared:/data"
