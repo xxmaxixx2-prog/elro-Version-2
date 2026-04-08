@@ -1,4 +1,4 @@
-# Pi Receiver Minimal v2
+# Pi Receiver Minimal v3
 
 Diese Version behebt die Probleme aus der ersten ZIP:
 - kein harter `/home/pi`-Pfad mehr
@@ -30,3 +30,8 @@ Steuerseite im Browser:
 ```text
 http://PI-IP:8091/
 ```
+
+
+Zusätzliche Fixes in v3:
+- `python-multipart` ist in den Requirements enthalten
+- FastAPI-Instanz ist sowohl als `app` als auch als `APP` verfügbar

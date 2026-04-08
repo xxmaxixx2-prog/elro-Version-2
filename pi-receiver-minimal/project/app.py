@@ -214,3 +214,7 @@ def reload_browser() -> JSONResponse:
 def reload_browser_post() -> JSONResponse:
     restart_browser()
     return JSONResponse({"status": "reloading"})
+
+
+# compatibility aliases for uvicorn/service variants
+APP = app
