@@ -1,0 +1,31 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Pi Receiver</title>
+</head>
+<body>
+<h1>Pi Receiver</h1>
+
+<input id="url" style="width:400px;" placeholder="Enter URL"/>
+<button onclick="openUrl()">Open URL</button>
+
+<br><br>
+
+<button onclick="fetch('/blank')">Blank</button>
+<button onclick="fetch('/reload')">Reload</button>
+
+<br><br>
+
+<button onclick="fetch('/kiosk/enable')">▶ Start Kiosk</button>
+<button onclick="fetch('/kiosk/disable')">⏹ Stop Kiosk</button>
+
+<script>
+function openUrl(){
+    const url = document.getElementById('url').value;
+    fetch('/open?url=' + encodeURIComponent(url));
+}
+</script>
+
+</body>
+</html>
