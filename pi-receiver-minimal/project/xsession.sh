@@ -1,31 +1,51 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-cd /home/pi/pi-receiver
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$SCRIPT_DIR"
 
-xset s off
-xset -dpms
-xset s noblank
+BROWSER_BIN="$(command -v chromium || command -v chromium-browser || true)"
+if [[ -z "$BROWSER_BIN" ]]; then
+  echo "Kein Chromium-Browser gefunden (chromium / chromium-browser)." >&2
+  sleep 10
+  exit 1
+fi
 
-unclutter -idle 0.1 -root &
+xset s off || true
+xset -dpms || true
+xset s noblank || true
 
-openbox-session &
+if command -v unclutter >/dev/null 2>&1; then
+  unclutter -idle 0.1 -root &
+fi
+
+if command -v openbox-session >/dev/null 2>&1; then
+  openbox-session &
+fi
 
 sleep 1
 
-while true; do
-  URL="$(python3 - <<'PY'
+read_url() {
+  python3 - "$SCRIPT_DIR" <<'PY'
 import json
+import sys
 from pathlib import Path
-state = Path('/home/pi/pi-receiver/state.json')
+
+base = Path(sys.argv[1]).resolve()
+blank = (base / 'blank.html').resolve().as_uri()
+state = base / 'state.json'
+
 try:
     data = json.loads(state.read_text(encoding='utf-8'))
-    print(data.get('target_url', 'file:///home/pi/pi-receiver/blank.html'))
+    print(data.get('target_url') or blank)
 except Exception:
-    print('file:///home/pi/pi-receiver/blank.html')
+    print(blank)
 PY
-)"
-  /usr/bin/chromium-browser \
+}
+
+while true; do
+  URL="$(read_url)"
+  "$BROWSER_BIN" \
     --kiosk \
     --noerrdialogs \
     --disable-infobars \
@@ -33,6 +53,8 @@ PY
     --disable-features=TranslateUI \
     --autoplay-policy=no-user-gesture-required \
     --check-for-update-interval=31536000 \
+    --no-first-run \
+    --disable-component-update \
     "$URL" || true
 
   sleep 1

@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import json
-import os
-import signal
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
@@ -11,22 +9,37 @@ from typing import Any
 from fastapi import FastAPI, Form, Query
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 
-APP = FastAPI(title="Pi Receiver API", version="1.0.0")
+app = FastAPI(title="Pi Receiver API", version="1.1.0")
 
 BASE_DIR = Path(__file__).resolve().parent
 STATE_FILE = BASE_DIR / "state.json"
-BLANK_URL = "file:///home/pi/pi-receiver/blank.html"
+BLANK_URL = (BASE_DIR / "blank.html").resolve().as_uri()
+
+
+def now_iso() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def default_state() -> dict[str, Any]:
+    return {"target_url": BLANK_URL, "updated_at": now_iso()}
 
 
 def load_state() -> dict[str, Any]:
     if not STATE_FILE.exists():
-        data = {"target_url": BLANK_URL, "updated_at": now_iso()}
+        data = default_state()
         save_state(data)
         return data
     try:
-        return json.loads(STATE_FILE.read_text(encoding="utf-8"))
+        data = json.loads(STATE_FILE.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            raise ValueError("state.json ist kein Objekt")
+        if not data.get("target_url"):
+            data["target_url"] = BLANK_URL
+        if not data.get("updated_at"):
+            data["updated_at"] = now_iso()
+        return data
     except Exception:
-        data = {"target_url": BLANK_URL, "updated_at": now_iso()}
+        data = default_state()
         save_state(data)
         return data
 
@@ -36,10 +49,6 @@ def save_state(data: dict[str, Any]) -> None:
         json.dumps(data, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
-
-
-def now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
 
 
 def normalize_url(raw: str) -> str:
@@ -52,11 +61,8 @@ def normalize_url(raw: str) -> str:
 
 
 def restart_browser() -> None:
-    # Chromium läuft in xsession.sh in einer while-Schleife.
-    # Wenn wir Chromium beenden, startet die Schleife es sofort neu
-    # und liest dabei die neue URL aus state.json.
     subprocess.run(
-        ["pkill", "-f", "chromium"],
+        ["pkill", "-f", "chromium|chromium-browser"],
         check=False,
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL,
@@ -72,17 +78,17 @@ def set_target(url: str) -> dict[str, Any]:
     return state
 
 
-@APP.get("/health")
+@app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
-@APP.get("/state")
+@app.get("/state")
 def state() -> JSONResponse:
     return JSONResponse(load_state())
 
 
-@APP.get("/", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse)
 def index() -> str:
     state = load_state()
     current = state.get("target_url", BLANK_URL)
@@ -168,43 +174,43 @@ def index() -> str:
 </html>"""
 
 
-@APP.post("/open-form")
+@app.post("/open-form")
 def open_form(url: str = Form(...)) -> RedirectResponse:
     set_target(url)
     return RedirectResponse(url="/", status_code=303)
 
 
-@APP.get("/open")
+@app.get("/open")
 def open_url(url: str = Query(..., min_length=1)) -> JSONResponse:
     state = set_target(url)
     return JSONResponse(state)
 
 
-@APP.post("/open")
+@app.post("/open")
 def open_url_post(url: str = Form(...)) -> JSONResponse:
     state = set_target(url)
     return JSONResponse(state)
 
 
-@APP.get("/blank")
+@app.get("/blank")
 def blank() -> JSONResponse:
     state = set_target(BLANK_URL)
     return JSONResponse(state)
 
 
-@APP.post("/blank")
+@app.post("/blank")
 def blank_post() -> JSONResponse:
     state = set_target(BLANK_URL)
     return JSONResponse(state)
 
 
-@APP.get("/reload")
+@app.get("/reload")
 def reload_browser() -> JSONResponse:
     restart_browser()
     return JSONResponse({"status": "reloading"})
 
 
-@APP.post("/reload")
+@app.post("/reload")
 def reload_browser_post() -> JSONResponse:
     restart_browser()
     return JSONResponse({"status": "reloading"})
