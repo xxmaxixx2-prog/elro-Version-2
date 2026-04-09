@@ -2,13 +2,17 @@
 
 Ein Raspberry Pi-basierter Receiver, der Web-Inhalte (YouTube, GIFs, Seiten) auf einem alten ELRO Fernseher über Kiosk-Modus darstellt.
 
-🧠 Konzept
+_________________________________________________________________________________________________________________
+Konzept
 Steuerung über Webinterface (Start / Stop / URL)
 Anzeige im Chromium Kiosk-Modus
 Ausgabe auf alten Fernseher (PAL / niedrige Auflösung)
 Inhalte werden remote gesteuert (Browser → Pi)
-🌐 Weboberfläche
+Weboberfläche
+<img width="924" height="368" alt="image" src="https://github.com/user-attachments/assets/b72397b9-3af9-41a4-87b3-4aaa0b427e40" />
 
+
+_________________________________________________________________________________________________________________
 Beispiel:
 
 URL eingeben
@@ -21,7 +25,7 @@ Unterstützt:
 YouTube Links
 GIFs (z. B. Retro / Pixel Stil)
 einfache Webseiten
-🎞️ Empfohlene Inhalte
+Empfohlene Inhalte
 
 Retro-GIFs (sehr performant):
 
@@ -32,13 +36,13 @@ Empfohlen:
 8-bit / 16-bit / 32-bit / 64-bit Stil
 niedrige Auflösung
 wenig Bewegung → stabiler auf alter Hardware
-📺 Zielgerät (ELRO Fernseher)
-Signal über HDMI → AV → RF Modulator
+Zielgerät (ELRO Fernseher)
+Signal über HDMI -> AV -> RF Modulator
 Anzeige:
 PAL (~576i)
 oft Schwarz-Weiß
 begrenzte Schärfe
-⚙️ Performance Settings (sehr wichtig)
+Performance Settings (sehr wichtig)
 
 Für stabile Darstellung:
 
@@ -57,7 +61,8 @@ Warum:
 reduziert CPU/GPU Last
 verhindert Lag & Abstürze
 stabilisiert alte Hardware-Ausgabe
-🧩 Architektur
+_________________________________________________________________________________________________________________
+Architektur
 Browser (Remote)
    ↓
 FastAPI (Docker)
@@ -105,13 +110,14 @@ alternativ:
 anderes Antennenkabel
 oder Gerät mit passendem Tuner verwenden
 _________________________________________________________________________________________________________________
-🚀 Features
+ Features
 Start / Stop Kiosk
 URL remote setzen
 Auto-Kiosk bei „Open URL“
 einfache Websteuerung
 Docker + Host getrennt
-📦 Projektstruktur
+_________________________________________________________________________________________________________________
+ Projektstruktur
 pi5-receiver-configurable/
 ├── api/                 # FastAPI Backend
 ├── host/                # Kiosk Scripts (Start/Stop)
@@ -128,7 +134,7 @@ Webinterface:
 http://<PI-IP>:18091
 
 
-
+_________________________________________________________________________________________________________________
 Continue:
 
 💡 Tipps
