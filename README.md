@@ -124,7 +124,9 @@ pi5-receiver-configurable/
 ├── docker-compose.yml
 ├── receiver.env         # Steuerung (ENABLE_KIOSK etc.)
 └── shared/              # State / Daten
-🧪 Nutzung
+
+
+Nutzung
 cd ~/elro-Version-2/pi5-receiver-configurable
 sudo docker compose --env-file receiver.env up -d --build
 sudo systemctl restart pi-receiver-kiosk.service
@@ -137,13 +139,13 @@ http://<PI-IP>:18091
 _________________________________________________________________________________________________________________
 Continue:
 
-💡 Tipps
+Tipps
 GIFs > Videos (weniger Last)
 YouTube nur bei stabiler Verbindung
 kurze Inhalte vermeiden Hänger
 lieber einfache Seiten statt komplexe Apps
 
-🔮 Ideen / Ausbau
+Ideen / Ausbau
 Statusanzeige im UI (AN/AUS)
 Preset Buttons (YouTube, Cam, Retro)
 Auto-Rotation von Inhalten
