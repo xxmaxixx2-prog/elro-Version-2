@@ -11,7 +11,9 @@ services:
       RELOAD_TOKEN_FILE: /data/reload.token
       HOST_BLANK_URL: ${HOST_BLANK_URL:-file:///opt/pi-receiver/host/blank.html}
       DEFAULT_URL: ${DEFAULT_URL:-file:///opt/pi-receiver/host/blank.html}
+      RECEIVER_ENV_FILE: /opt/pi-receiver/receiver.env
     ports:
       - "${API_PORT:-18091}:${CONTAINER_PORT:-8091}"
     volumes:
       - "${BASE_DIR:-/opt/pi-receiver}/shared:/data"
+      - "${BASE_DIR:-/opt/pi-receiver}/receiver.env:/opt/pi-receiver/receiver.env"
