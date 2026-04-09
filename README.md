@@ -119,11 +119,15 @@ Docker + Host getrennt
 _________________________________________________________________________________________________________________
  Projektstruktur
 pi5-receiver-configurable/
-api/                    # FastAPI Backend
-host/                   # Kiosk Scripts (Start/Stop)
+api/                    
+      # FastAPI Backend
+host/                  
+      # Kiosk Scripts (Start/Stop)
 docker-compose.yml
-receiver.env            # Steuerung (ENABLE_KIOSK etc.)
-shared/                 # State / Daten
+receiver.env            
+      # Steuerung (ENABLE_KIOSK etc.)
+shared/                
+      # State / Daten
 
 
 Nutzung
