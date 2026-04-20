@@ -1,4 +1,4 @@
-📺 Pi Receiver – Retro TV Kiosk (ELRO)
+Pi Receiver – Retro TV Kiosk (ELRO)
 
 Ein Raspberry Pi-basierter Receiver, der Web-Inhalte (YouTube, GIFs, Seiten) auf einem alten ELRO Fernseher über Kiosk-Modus darstellt.
 
